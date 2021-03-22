@@ -28,6 +28,9 @@ var config = require( "./config" );
 var app = express();
 var router = express.Router();
 
+app.set( "views", __dirname + "/dist" );
+app.use( express.static(__dirname + "/dist") );
+
 app.use( passport.initialize() );
 app.use( passport.session() );
 
@@ -63,7 +66,10 @@ passport.deserializeUser( function ( obj, done ) {
 });
 
 router.get( "/", function ( req, res ) {
-	res.send('Hello Michael!');
+	res.render( "index", {
+		user: req && req.session && req.session.user,
+		url: req.baseUrl
+	} );
 } );
 
 router.get( "/login", function ( req, res ) {
