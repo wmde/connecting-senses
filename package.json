@@ -1,31 +1,71 @@
 {
   "name": "connecting-senses",
   "version": "0.0.1",
+  "private": true,
   "description": "A tool to connect Lexeme senses to Wikidata Items",
-  "main": "server.js",
+  "author": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wmde/connecting-senses.git"
+  "main": "server.js",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "passport": "^0.4.1",
+    "passport-mediawiki-oauth": "^0.1.0",
+    "vue": "^3.0.0",
+    "vuex": "^4.0.0-0"
   },
+  "devDependencies": {
+    "@types/jest": "^24.0.19",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "lint-staged": "^9.5.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.1.5",
+    "vue-jest": "^5.0.0-0"
+  },
+  "_id": "connecting-senses@0.0.1",
+  "bugs": {
+    "url": "https://github.com/wmde/connecting-senses/issues"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "homepage": "https://github.com/wmde/connecting-senses#readme",
   "keywords": [
     "wmde",
     "wikidata",
     "lexeme"
   ],
-  "author": "",
   "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/wmde/connecting-senses/issues"
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   },
-  "homepage": "https://github.com/wmde/connecting-senses#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "passport": "^0.4.1",
-    "passport-mediawiki-oauth": "^0.1.0"
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wmde/connecting-senses.git"
   }
 }
