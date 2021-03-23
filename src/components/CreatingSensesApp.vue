@@ -5,14 +5,9 @@
 			:user-display-name="userDisplayName"
 		/>
 		<main>
-		<h1>Connecting Senses Tool</h1>
-		<p>
-			Quickly connect senses to items.
-			This will help to connect senses amongst each other.
-			For more information visit <a href="https://example.com/FIXME">this help page</a>.
-		</p>
-		<Login v-if="userDisplayName === null" />
-		<mark v-else>TODO</mark>
+			<Intro />
+			<Login v-if="userDisplayName === null" />
+			<mark v-else>TODO</mark>
 		</main>
 	</div>
 </template>
@@ -21,9 +16,10 @@
 import { defineComponent } from 'vue';
 import Login from '@/components/Login.vue';
 import UserTools from '@/components/UserTools.vue';
+import Intro from '@/components/Intro.vue';
 
 export default defineComponent( {
-	components: { UserTools, Login },
+	components: { Intro, UserTools, Login },
 	computed: {
 		userDisplayName(): null | string {
 			return this.$store.getters.userDisplayName;
