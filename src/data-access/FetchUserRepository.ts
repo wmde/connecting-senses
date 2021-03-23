@@ -9,9 +9,9 @@ export default class FetchUserRepository implements UserRepository {
 				return null;
 			}
 			console.log( { user } );
-			return user as User; // Todo: verify that this is the structure that we have here
+			return user.displayName as User;
 		} catch ( e ) {
-			console.log(e); // not json
+			console.log(e);
 			// TODO show better error depending on error
 			return null;
 		}
