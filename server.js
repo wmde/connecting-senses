@@ -103,7 +103,6 @@ router.post( "/logout" , function ( req, res ) {
 } );
 
 router.get( '/currentUser', function ( req, res ) {
-	// return res.status( 200 ).send( JSON.stringify( { displayName: 'TestUser (WMF)' } ) );
 	const user  = req && req.session && req.session.user;
 	if (!user) {
 		return res.status(401).send(false);
