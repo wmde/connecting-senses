@@ -8,7 +8,6 @@ export default class FetchUserRepository implements UserRepository {
 			if (!user) {
 				return null;
 			}
-			console.log( { user } );
 			return user.displayName as User;
 		} catch ( e ) {
 			console.log(e);
