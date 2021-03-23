@@ -97,13 +97,13 @@ router.get( "/auth/mediawiki/callback", function( req, res, next ) {
 	} )( req, res, next );
 } );
 
-router.get( "/logout" , function ( req, res ) {
+router.post( "/logout" , function ( req, res ) {
 	delete req.session.user;
 	res.redirect( req.baseUrl + "/" );
 } );
 
 router.get( '/currentUser', function ( req, res ) {
-	// return res.status( 200 ).send( JSON.stringify( { displayName: 'TestUser (WMF)', username: 'testuser' } ) );
+	// return res.status( 200 ).send( JSON.stringify( { displayName: 'TestUser (WMF)' } ) );
 	const user  = req && req.session && req.session.user;
 	if (!user) {
 		return res.status(401).send(false);
