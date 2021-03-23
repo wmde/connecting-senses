@@ -1,4 +1,4 @@
-name: SSH Pull and Build
+name: Build and Deploy to Toolforge
 
 on: 
   push: 
@@ -40,11 +40,8 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          become connecting-senses
-          rm -rf www/js
-          exit
+          become connecting-senses rm -rf www
           cp -rv www ~tools.connecting-senses/
-          become connecting-senses
-          take www
-          webservice --backend=kubernetes node10 restart
-          exit
+          become connecting-senses take www
+          become connecting-senses cp config.js www/js/config.js
+          become connecting-senses webservice --backend=kubernetes node10 restart
