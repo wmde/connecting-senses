@@ -44,7 +44,8 @@ app.use( "/", router );
 passport.use(
 	new MediaWikiStrategy({
 		consumerKey: config.consumer_key,
-		consumerSecret: config.consumer_secret
+		consumerSecret: config.consumer_secret,
+		baseURL: 'https://www.wikidata.org/'
 	},
 	function ( token, tokenSecret, profile, done ) {
 		profile.oauth = {
