@@ -2,7 +2,9 @@ name: SSH Pull and Build
 
 on: 
   push: 
-   branches: [ main ]
+   branches:
+    - main
+    - gh-actions/**
 
 jobs:
   build:
@@ -15,5 +17,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
-        passphrase: ${{ secrets.KEY }}
-        script: whoami
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: |
+          echo "Hello World\n" >> something.txt
