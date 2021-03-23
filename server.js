@@ -75,7 +75,7 @@ router.get( "/", function ( req, res ) {
 router.get( "/login", function ( req, res ) {
 	res.redirect( req.baseUrl + "/auth/mediawiki/callback" );
 } );
- 
+
 router.get( "/auth/mediawiki/callback", function( req, res, next ) {
 	passport.authenticate( "mediawiki", function( err, user ) {
 		if ( err ) {
@@ -100,6 +100,16 @@ router.get( "/logout" , function ( req, res ) {
 	delete req.session.user;
 	res.redirect( req.baseUrl + "/" );
 } );
+
+router.get( '/currentUser', function ( req, res ) {
+	// return res.status( 200 ).send( JSON.stringify( { displayName: 'TestUser (WMF)', username: 'testuser' } ) );
+	const user  = req && req.session && req.session.user;
+	if (!user) {
+		return res.status(401).send(false);
+	}
+
+	return res.status(200).send( JSON.stringify( req.session.user ) );
+});
 
 app.listen( process.env.PORT || 5000, function () {
 	console.log( "Node.js app listening on port 5000!" );
