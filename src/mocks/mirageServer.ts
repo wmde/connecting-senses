@@ -7,7 +7,9 @@ export function makeServer({ environment = "development" } = {}): unknown {
     routes() {
       this.get("/currentUser", () => {
         return { displayName: 'TestUser (Mirage)' }
-      })
+      });
+
+      this.passthrough( "https://www.wikidata.org/**" )
     },
   });
 }

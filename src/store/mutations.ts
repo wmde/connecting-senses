@@ -1,4 +1,4 @@
-import { RootState } from '@/store/index';
+import { LanguageInfo, RootState } from '@/store/index';
 import { User } from '@/data-access/UserRepository';
 
 export default {
@@ -7,5 +7,8 @@ export default {
 	},
 	setInitializingDone( state: RootState ): void {
 		state.isInitializing = false;
-	}
+	},
+	setLanguageInfo( state: RootState, languageInfo: LanguageInfo): void {
+		state.language = languageInfo;
+	},
 };

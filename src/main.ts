@@ -1,8 +1,11 @@
-import { createApp } from 'vue'
+import { createApp } from 'vue';
+import PrimeVue from 'primevue/config';
+import 'primevue/resources/primevue.min.css';
+import 'primevue/resources/themes/md-light-deeppurple/theme.css';
 import App from './App.vue'
 import createServices from '@/services/createServices';
 import createStore from './store';
-import { makeServer } from "@/mocks/mirageServer"
+import { makeServer } from "@/mocks/mirageServer";
 
 if ( process.env.NODE_ENV === "development" ) {
 	makeServer()
@@ -13,4 +16,4 @@ const services = createServices();
 const store = createStore( services );
 store.dispatch( 'initApp' );
 
-createApp(App).use(store).mount('#app')
+createApp(App).use(store).use( PrimeVue).mount('#app')
