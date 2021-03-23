@@ -32,7 +32,7 @@ jobs:
         source: "./"
         target: "www/js"
         rm: true
-    - name: Executing remote ssh commands
+    - name: Deploy and restart server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -40,4 +40,11 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          ls www/js -la
+          become connecting-senses
+          rm www/js
+          exit
+          cp www ~tools.connecting-senses/
+          become connecting-senses
+          take www
+          webservice --backend=kubernetes node10 restart
+          exit
