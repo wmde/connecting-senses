@@ -18,7 +18,7 @@ jobs:
         node-version: 10.x
     - name: Installing dependencies
       run: npm ci
-    - name: Building Vue App
+    - name: Building Vue.js app
       run: npm run build
     - name: Preparing code to sync
       run: npm prune --production
@@ -41,9 +41,9 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           become connecting-senses
-          rm www/js
+          rm -rf www/js
           exit
-          cp www ~tools.connecting-senses/
+          cp -rv www ~tools.connecting-senses/
           become connecting-senses
           take www
           webservice --backend=kubernetes node10 restart
