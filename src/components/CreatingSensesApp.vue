@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<nav v-if="userDisplayName !== null"><mark>TODO NEXT</mark> {{userDisplayName}}</nav>
+		<UserTools
+			v-if="userDisplayName !== null"
+			:user-display-name="userDisplayName"
+		/>
 		<main>
 		<h1>Connecting Senses Tool</h1>
 		<p>
@@ -17,9 +20,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Login from '@/components/Login.vue';
+import UserTools from '@/components/UserTools.vue';
 
 export default defineComponent( {
-	components: { Login },
+	components: { UserTools, Login },
 	computed: {
 		userDisplayName(): null | string {
 			return this.$store.getters.userDisplayName;
