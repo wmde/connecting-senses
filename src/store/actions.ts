@@ -3,11 +3,13 @@ import { LanguageInfo, RootState } from '@/store/index';
 import { ActionContext, ActionTree } from 'vuex';
 import SearchEntityRepository, { SearchOptions, SearchResult } from '@/data-access/SearchEntityRepository';
 import ReadingClaimsRepository from '@/data-access/ReadingClaimsRepository';
+import SensesRepository from '@/data-access/SensesRepository';
 
 export default (
 	userRepository: UserRepository,
 	searchEntityRepository: SearchEntityRepository,
 	getClaimsRepository: ReadingClaimsRepository,
+	sensesRepository: SensesRepository,
 ): ActionTree<RootState, RootState> => ( {
 	async initApp( context: ActionContext<RootState, RootState> ): Promise<void> {
 		const user = await userRepository.getCurrentUser();
@@ -16,6 +18,14 @@ export default (
 	},
 	setLanguageInfo( context: ActionContext<RootState, RootState>, langInfo: LanguageInfo ): void {
 		context.commit( 'setLanguageInfo', langInfo );
+		context.dispatch( 'queryForSenses', langInfo );
+	},
+	async queryForSenses( context: ActionContext<RootState, RootState>, langInfo: LanguageInfo ): Promise<void> {
+		const senses = await sensesRepository.getSensesWithoutItems(
+			langInfo.code,
+			langInfo.id,
+		);
+		context.commit( 'setSenses', senses );
 	},
 	async searchItemValues(
 		_context: ActionContext<RootState, RootState>,

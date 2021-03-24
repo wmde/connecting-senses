@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div lang="en" dir="ltr">
 		<CreatingSensesApp v-if="initializingDone" />
 		<span v-else>Loading...</span>
 	</div>

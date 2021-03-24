@@ -4,6 +4,7 @@ import createActions from '@/store/actions';
 import { User } from '@/data-access/UserRepository';
 import mutations from '@/store/mutations';
 import getters from '@/store/getters';
+import { SenseInfo } from '@/data-access/SensesRepository';
 
 export interface LanguageInfo {
 	id: string;
@@ -15,6 +16,7 @@ export interface RootState {
 	user: User | null,
 	isInitializing: boolean,
 	language: null | LanguageInfo,
+	senses: SenseInfo[],
 }
 
 function getInitialState(): RootState {
@@ -22,6 +24,7 @@ function getInitialState(): RootState {
 		user: null,
 		isInitializing: true,
 		language: null,
+		senses: [],
 	};
 }
 
@@ -33,6 +36,7 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
 			services.get( 'userRepository' ),
 			services.get( 'searchEntityRepository' ),
 			services.get( 'getClaimsRepository' ),
+			services.get( 'sensesRepository' ),
 		),
 		modules: {},
 		getters,
