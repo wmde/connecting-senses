@@ -5,6 +5,7 @@ import { User } from '@/data-access/UserRepository';
 import mutations from '@/store/mutations';
 import getters from '@/store/getters';
 import { SenseInfo } from '@/data-access/SensesRepository';
+import createItemModule from '@/store/items';
 
 export interface LanguageInfo {
 	id: string;
@@ -46,7 +47,9 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
 			services.get( 'getClaimsRepository' ),
 			services.get( 'sensesRepository' ),
 		),
-		modules: {},
+		modules: {
+			items: createItemModule(),
+		},
 		getters,
 	} );
 }
