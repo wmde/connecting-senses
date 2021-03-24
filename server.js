@@ -3,7 +3,6 @@ require('dotenv').config();
 
 const express = require( "express" );
 const session = require( "express-session" );
-const bodyParser = require( "body-parser" );
 const createError = require( "http-errors" );
 const logger = require('morgan');
 
@@ -15,7 +14,6 @@ const app = express();
 app.set( "views", __dirname + "/dist" );
 app.use( express.static(__dirname + "/dist") );
 
-app.use( bodyParser.json() );
 app.use( logger( "dev", {
 	skip: function (req, res) { return res.statusCode < 400 }
 } ) );
