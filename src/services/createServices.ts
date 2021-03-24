@@ -3,6 +3,7 @@ import FetchUserRepository from '@/data-access/FetchUserRepository';
 import FetchSearchEntityRepository from '@/data-access/FetchSearchEntityRepository';
 import FetchReadingClaimsRepository from '@/data-access/FetchReadingClaimsRepository';
 import FetchSensesRepository from '@/data-access/FetchSensesRepository';
+import FetchReadingEntityRepository from '@/data-access/FetchReadingEntityRepository';
 
 export default function createServices(): ServiceContainer {
 	const services = new ServiceContainer();
@@ -21,6 +22,10 @@ export default function createServices(): ServiceContainer {
 
 	services.set( 'sensesRepository', new FetchSensesRepository(
 		'https://query.wikidata.org/bigdata/namespace/wdq/sparql',
+	) );
+
+	services.set( 'readingEntityRepository', new FetchReadingEntityRepository(
+		'https://www.wikidata.org/w/api.php',
 	) );
 
 	return services;
