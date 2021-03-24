@@ -1,4 +1,4 @@
-import { Store } from 'vuex'
+import { Store } from 'vuex';
 import { RootState } from '@/store';
 
 /**

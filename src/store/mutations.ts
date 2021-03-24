@@ -8,7 +8,7 @@ export default {
 	setInitializingDone( state: RootState ): void {
 		state.isInitializing = false;
 	},
-	setLanguageInfo( state: RootState, languageInfo: LanguageInfo): void {
+	setLanguageInfo( state: RootState, languageInfo: LanguageInfo ): void {
 		state.language = languageInfo;
 	},
 };

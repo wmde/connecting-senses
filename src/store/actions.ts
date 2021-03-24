@@ -15,11 +15,11 @@ export default (
 		context.commit( 'setInitializingDone' );
 	},
 	setLanguageInfo( context: ActionContext<RootState, RootState>, langInfo: LanguageInfo ): void {
-		context.commit('setLanguageInfo', langInfo);
+		context.commit( 'setLanguageInfo', langInfo );
 	},
 	async searchItemValues(
 		_context: ActionContext<RootState, RootState>,
-		options: SearchOptions
+		options: SearchOptions,
 	): Promise<SearchResult[]> {
 		return await searchEntityRepository.searchItemValues(
 			options.search,
@@ -30,12 +30,12 @@ export default (
 	async getItemLanguageCode(
 		_context: ActionContext<RootState, RootState>,
 		itemId: string,
-	): Promise<string|null> {
+	): Promise<string | null> {
 		const languageCodePid = 'P218';
 		const claims = await getClaimsRepository.getClaims( itemId, languageCodePid );
-		if (!claims[languageCodePid]) {
+		if ( !claims[ languageCodePid ] ) {
 			return null;
 		}
-		return claims[ languageCodePid ][0].mainsnak.datavalue.value as string;
-	}
+		return claims[ languageCodePid ][ 0 ].mainsnak.datavalue.value as string;
+	},
 } );
