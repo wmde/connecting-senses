@@ -44,6 +44,10 @@ LIMIT ${numberOfSensesPerRequest}
 			throw new TechnicalProblem( 'Network error' );
 		}
 
+		if ( !response.ok ) {
+			throw new TechnicalProblem( `${response.status}: ${response.statusText}` );
+		}
+
 		const data = await response.json();
 
 		const bindings = data.results.bindings;
