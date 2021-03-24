@@ -12,11 +12,18 @@ export interface LanguageInfo {
 	code: string;
 }
 
+export interface ItemCandidate {
+	id: string;
+	label: string;
+	description: string;
+}
+
 export interface RootState {
 	user: User | null,
 	isInitializing: boolean,
 	language: null | LanguageInfo,
 	senses: SenseInfo[],
+	searchedItemCandidate: ItemCandidate | null,
 }
 
 function getInitialState(): RootState {
@@ -25,6 +32,7 @@ function getInitialState(): RootState {
 		isInitializing: true,
 		language: null,
 		senses: [],
+		searchedItemCandidate: null,
 	};
 }
 
