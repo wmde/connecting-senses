@@ -8,7 +8,7 @@
 			@complete="searchItems"
 			@item-select="languageSelected"
 			field="label"
-			placeholder="placeholder"
+			placeholder="English"
 		>
 			<template #item="slotProps">
 				<div>
