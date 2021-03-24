@@ -33,15 +33,27 @@ export default (
 		context.commit( 'setSearchedItemCandidate', itemCandidate );
 	},
 	async searchItemValues(
-		_context: ActionContext<RootState, RootState>,
+		context: ActionContext<RootState, RootState>,
 		options: SearchOptions,
 	): Promise<SearchResult[]> {
-		return await searchEntityRepository.searchItemValues(
+		const itemResults = await searchEntityRepository.searchItemValues(
 			options.search,
 			options.limit,
 			options.offset,
 			options.languageCode,
 		);
+
+		if ( options.languageCode ) {
+			// otherwise we would not know which language the search result is in (in principle)
+			itemResults.forEach( ( value: SearchResult ) => {
+				context.commit( 'setItemTerms', {
+					...value,
+					languageCode: options.languageCode,
+				} );
+			} );
+		}
+
+		return itemResults;
 	},
 	async getItemLanguageCode(
 		_context: ActionContext<RootState, RootState>,

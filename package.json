@@ -38,6 +38,7 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "@wmde/eslint-config-wikimedia-typescript": "^0.2.0",
+    "@wmde/wikibase-datamodel-types": "^0.2.0",
     "core-js": "^3.6.5",
     "eslint": "^7.20.0",
     "eslint-config-wikimedia": "^0.17.0",
