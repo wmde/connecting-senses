@@ -31,11 +31,11 @@ export default (
 		_context: ActionContext<RootState, RootState>,
 		itemId: string,
 	): Promise<string|null> {
-		const wikimediaLanguageCodePid = 'P424'; //FIXME: check with Lydia that this is the right property
-		const claims = await getClaimsRepository.getClaims( itemId, wikimediaLanguageCodePid );
-		if (!claims[wikimediaLanguageCodePid]) {
+		const languageCodePid = 'P218';
+		const claims = await getClaimsRepository.getClaims( itemId, languageCodePid );
+		if (!claims[languageCodePid]) {
 			return null;
 		}
-		return claims[ wikimediaLanguageCodePid ][0].mainsnak.datavalue.value as string;
+		return claims[ languageCodePid ][0].mainsnak.datavalue.value as string;
 	}
 } );

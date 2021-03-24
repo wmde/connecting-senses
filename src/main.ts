@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/primevue.min.css';
-import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+import 'primevue/resources/themes/saga-blue/theme.css';
 import App from './App.vue'
 import createServices from '@/services/createServices';
 import createStore from './store';

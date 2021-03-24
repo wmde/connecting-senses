@@ -50,7 +50,7 @@ export default defineComponent( {
 			// TODO: show some loading thingy here
 			const langCode = await this.$store.dispatch( 'getItemLanguageCode', selectedItemId );
 			if (!langCode) {
-				this.error = 'The item you chose does not seem to have a language code associated with it (P424).';
+				this.error = 'The item you chose does not seem to have a ISO 639-1 language code associated with it (P218).';
 				return;
 			}
 			this.error = null;
