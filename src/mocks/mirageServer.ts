@@ -1,15 +1,15 @@
-import { createServer } from "miragejs"
+import { createServer } from 'miragejs';
 
-export function makeServer({ environment = "development" } = {}): unknown {
- return createServer({
-    environment,
+export function makeServer( { environment = 'development' } = {} ): unknown {
+	return createServer( {
+		environment,
 
-    routes() {
-      this.get("/currentUser", () => {
-        return { displayName: 'TestUser (Mirage)' }
-      });
+		routes() {
+			this.get( '/currentUser', () => {
+				return { displayName: 'TestUser (Mirage)' };
+			} );
 
-      this.passthrough( "https://www.wikidata.org/**" )
-    },
-  });
+			this.passthrough( 'https://www.wikidata.org/**' );
+		},
+	} );
 }

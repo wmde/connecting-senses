@@ -1,7 +1,7 @@
 import ReadingClaimsRepository, { Claim } from '@/data-access/ReadingClaimsRepository';
 import TechnicalProblem from '@/data-access/TechnicalProblem';
 
-export default class FetchReadingClaimsRepository implements ReadingClaimsRepository{
+export default class FetchReadingClaimsRepository implements ReadingClaimsRepository {
 	private readonly forLanguageCode: string;
 	private readonly endpoint: string;
 
@@ -10,7 +10,7 @@ export default class FetchReadingClaimsRepository implements ReadingClaimsReposi
 		this.endpoint = endpoint;
 	}
 
-	async getClaims( entityID: string, propertyId: string ): Promise<Record<string, Claim[]>> {
+	public async getClaims( entityID: string, propertyId: string ): Promise<Record<string, Claim[]>> {
 		const params: Record<string, string> = {
 			action: 'wbgetclaims',
 			entity: entityID,
@@ -20,7 +20,7 @@ export default class FetchReadingClaimsRepository implements ReadingClaimsReposi
 			errorformat: 'plaintext',
 			origin: '*',
 		};
-		if (propertyId) {
+		if ( propertyId ) {
 			params.property = propertyId;
 		}
 

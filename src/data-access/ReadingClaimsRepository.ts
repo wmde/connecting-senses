@@ -13,5 +13,5 @@ export interface Claim {
 }
 
 export default interface ReadingClaimsRepository {
-	getClaims(entityID: string, propertyId: string): Promise<Record<string, Claim[]>>;
+	getClaims( entityID: string, propertyId: string ): Promise<Record<string, Claim[]>>;
 }
