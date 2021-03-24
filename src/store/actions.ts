@@ -1,5 +1,5 @@
 import UserRepository from '@/data-access/UserRepository';
-import { LanguageInfo, RootState } from '@/store/index';
+import { ItemCandidate, LanguageInfo, RootState } from '@/store/index';
 import { ActionContext, ActionTree } from 'vuex';
 import SearchEntityRepository, { SearchOptions, SearchResult } from '@/data-access/SearchEntityRepository';
 import ReadingClaimsRepository from '@/data-access/ReadingClaimsRepository';
@@ -27,6 +27,11 @@ export default (
 		);
 		context.commit( 'setSenses', senses );
 	},
+	async setSearchedItemCandidate(
+		context: ActionContext<RootState, RootState>, itemCandidate: ItemCandidate,
+	): Promise<void> {
+		context.commit( 'setSearchedItemCandidate', itemCandidate );
+	},
 	async searchItemValues(
 		_context: ActionContext<RootState, RootState>,
 		options: SearchOptions,
@@ -35,6 +40,7 @@ export default (
 			options.search,
 			options.limit,
 			options.offset,
+			options.languageCode,
 		);
 	},
 	async getItemLanguageCode(

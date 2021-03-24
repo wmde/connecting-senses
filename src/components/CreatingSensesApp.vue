@@ -9,6 +9,7 @@
 			<Login v-if="userDisplayName === null" />
 			<LanguagePicker v-else />
 			<Sense v-if="sense" :sense-info="sense" :language-code="languageCode" />
+			<ItemSearch v-if="sense" :language-code="languageCode" />
 		</main>
 	</div>
 </template>
@@ -21,9 +22,10 @@ import Intro from '@/components/Intro.vue';
 import LanguagePicker from '@/components/LanguagePicker.vue';
 import { SenseInfo } from '@/data-access/SensesRepository';
 import Sense from '@/components/Sense.vue';
+import ItemSearch from '@/components/ItemSearch.vue';
 
 export default defineComponent( {
-	components: { Sense, Intro, LanguagePicker, UserTools, Login },
+	components: { ItemSearch, Sense, Intro, LanguagePicker, UserTools, Login },
 	computed: {
 		userDisplayName(): null | string {
 			return this.$store.getters.userDisplayName;

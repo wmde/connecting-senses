@@ -10,12 +10,17 @@ export default class FetchSearchEntityRepository implements SearchEntityReposito
 		this.endpoint = endpoint;
 	}
 
-	private async searchEntities( searchString: string, entityType: string, limit?: number, offset?: number ):
-	Promise<SearchResult[]> {
+	private async searchEntities(
+		searchString: string,
+		entityType: string,
+		limit?: number,
+		offset?: number,
+		langCode?: string,
+	): Promise<SearchResult[]> {
 		if ( !searchString ) {
 			throw new Error( 'The parameter searchString must not be empty!' );
 		}
-		const params: { [key: string]: string } = {
+		const params: { [ key: string ]: string } = {
 			action: 'wbsearchentities',
 			search: searchString,
 			language: this.forLanguageCode,
@@ -31,6 +36,11 @@ export default class FetchSearchEntityRepository implements SearchEntityReposito
 		}
 		if ( offset ) {
 			params.continue = `${offset}`;
+		}
+		if ( langCode ) {
+			params.language = langCode;
+			params.uselang = langCode;
+			params.strictlanguage = '1';
 		}
 
 		const url = new URL( this.endpoint );
@@ -53,7 +63,9 @@ export default class FetchSearchEntityRepository implements SearchEntityReposito
 		return data.search;
 	}
 
-	public searchItemValues( searchString: string, limit?: number, offset?: number ): Promise<SearchResult[]> {
-		return this.searchEntities( searchString, 'item', limit, offset );
+	public searchItemValues(
+		searchString: string, limit?: number, offset?: number, langCode?: string,
+	): Promise<SearchResult[]> {
+		return this.searchEntities( searchString, 'item', limit, offset, langCode );
 	}
 }

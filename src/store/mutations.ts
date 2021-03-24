@@ -1,4 +1,4 @@
-import { LanguageInfo, RootState } from '@/store/index';
+import { ItemCandidate, LanguageInfo, RootState } from '@/store/index';
 import { User } from '@/data-access/UserRepository';
 import { SenseInfo } from '@/data-access/SensesRepository';
 
@@ -14,5 +14,8 @@ export default {
 	},
 	setSenses( state: RootState, senses: SenseInfo[] ): void {
 		state.senses = senses;
+	},
+	setSearchedItemCandidate( state: RootState, itemCandidate: ItemCandidate ): void {
+		state.searchedItemCandidate = itemCandidate;
 	},
 };
