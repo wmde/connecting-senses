@@ -13,7 +13,7 @@ generator client {
 model DecisionRecord {
   id        Int       @default(autoincrement()) @id
   time      DateTime  @default(now())
-  sense_id  String
+  senseId   String    @map("sense_id")
   decision  Decision
 }
 
