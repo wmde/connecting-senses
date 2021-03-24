@@ -43,5 +43,5 @@ jobs:
           become connecting-senses rm -rf www
           cp -rv www ~tools.connecting-senses/
           become connecting-senses take www
-          become connecting-senses cp config.js www/js/config.js
+          become connecting-senses cp .env www/js/.env
           become connecting-senses webservice --backend=kubernetes node10 restart
