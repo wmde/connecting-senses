@@ -10,6 +10,7 @@ export function makeServer( { environment = 'development' } = {} ): unknown {
 			} );
 
 			this.passthrough( 'https://www.wikidata.org/**' );
+			this.passthrough( 'https://query.wikidata.org/**' );
 		},
 	} );
 }
