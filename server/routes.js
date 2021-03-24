@@ -1,13 +1,14 @@
-const express = require("express");
-const passport = require("passport");
+const express = require( "express" );
+const passport = require( "passport" );
+const createError = require( "http-errors" );
+const { PrismaClient } = require( "@prisma/client" );
+
+const prisma = new PrismaClient();
 const router = express.Router();
 
-// Serve Vue,js Application
+// Serve Vue.js Application
 router.get( "/", function ( req, res ) {
-	res.render( "index", {
-		user: req && req.session && req.session.user,
-		url: req.baseUrl
-	} );
+	res.render( "index" );
 } );
 
 
@@ -44,10 +45,25 @@ router.post( "/logout" , function ( req, res ) {
 router.get( "/currentUser", function ( req, res ) {
 	const user  = req && req.session && req.session.user;
 	if (!user) {
-		return res.status(401).send(false);
+		return next( createError( 401 ) );
 	}
 
 	return res.status(200).send( JSON.stringify( req.session.user ) );
 });
+
+// Decision tracking
+router.post( "/decision", async ( req, res, next ) => {
+	const { senseId, decision } = req.body;
+	try {
+		const result = await prisma.decisionRecord.create( {
+			data: { senseId, decision }
+		} );
+	
+		res.json( result );
+	} catch (e) {
+		return next( createError( 500, e ) )
+	}
+
+} );
 
 module.exports = router;
