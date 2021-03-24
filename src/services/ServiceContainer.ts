@@ -1,7 +1,11 @@
 import UserRepository from '@/data-access/UserRepository';
+import SearchEntityRepository from '@/data-access/SearchEntityRepository';
+import ReadingClaimsRepository from '@/data-access/ReadingClaimsRepository';
 
 export interface Services {
 	userRepository: UserRepository;
+	searchEntityRepository: SearchEntityRepository,
+	getClaimsRepository: ReadingClaimsRepository,
 }
 
 export default class ServiceContainer {

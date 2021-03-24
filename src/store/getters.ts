@@ -8,4 +8,7 @@ export default {
 
 		return rootState.user;
 	},
+	languageLabel( rootState: RootState ): string | null {
+		return rootState.language?.label ?? null;
+	},
 };

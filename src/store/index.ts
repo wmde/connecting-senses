@@ -8,12 +8,20 @@ import getters from '@/store/getters';
 export interface RootState {
   user: User | null,
   isInitializing: boolean,
+  language: null | LanguageInfo,
+}
+
+export interface LanguageInfo {
+  id: string;
+  label: string;
+  code: string;
 }
 
 function getInitialState(): RootState {
   return {
     user: null,
     isInitializing: true,
+    language: null,
   };
 }
 
@@ -21,7 +29,11 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
   return vuexCreateStore( {
     state: getInitialState(),
     mutations,
-    actions: createActions( services.get( 'userRepository' ) ),
+    actions: createActions(
+      services.get( 'userRepository' ),
+      services.get( 'searchEntityRepository' ),
+      services.get( 'getClaimsRepository' ),
+    ),
     modules: {},
     getters,
   } );
