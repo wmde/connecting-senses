@@ -1,4 +1,4 @@
-import { ItemCandidate, LanguageInfo, RootState } from '@/store/index';
+import { ItemCandidate, LanguageInfo, RootState, UndoState } from '@/store/index';
 import { User } from '@/data-access/UserRepository';
 import { SenseInfo } from '@/data-access/SensesRepository';
 
@@ -21,8 +21,12 @@ export default {
 	addToListOfSkippedSenses( state: RootState, senseId: string ): void {
 		state.skippedSenses.push( senseId );
 	},
+	setUndoState( state: RootState, undo: UndoState ): void {
+		state.undo = undo;
+	},
 	goToNextSense( state: RootState ): void {
 		state.searchedItemCandidate = null;
 		state.senses = state.senses.slice( 1 );
+		state.undo = null;
 	},
 };

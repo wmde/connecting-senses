@@ -21,6 +21,8 @@ export interface ItemCandidate {
 	imageUrl?: string; // TODO: ignored for now, needs rendering via API?
 }
 
+export type UndoState = null | 'connection' | 'rejection' | 'rejectionUndone';
+
 export interface RootState {
 	user: User | null,
 	isInitializing: boolean,
@@ -28,6 +30,7 @@ export interface RootState {
 	senses: SenseInfo[],
 	searchedItemCandidate: ItemCandidate | null,
 	skippedSenses: string[],
+	undo: UndoState,
 }
 
 function getInitialState(): RootState {
@@ -38,6 +41,7 @@ function getInitialState(): RootState {
 		senses: [],
 		searchedItemCandidate: null,
 		skippedSenses: [],
+		undo: null,
 	};
 }
 
