@@ -12,8 +12,8 @@ export default {
 	setLanguageInfo( state: RootState, languageInfo: LanguageInfo ): void {
 		state.language = languageInfo;
 	},
-	setSenses( state: RootState, senses: SenseInfo[] ): void {
-		state.senses = senses;
+	addSenses( state: RootState, senses: SenseInfo[] ): void {
+		state.senses = [ ...state.senses, ...senses ];
 	},
 	setSearchedItemCandidate( state: RootState, itemCandidate: ItemCandidate ): void {
 		state.searchedItemCandidate = itemCandidate;
@@ -23,6 +23,6 @@ export default {
 	},
 	goToNextSense( state: RootState ): void {
 		state.searchedItemCandidate = null;
-		state.senses.shift();
+		state.senses = state.senses.slice( 1 );
 	},
 };

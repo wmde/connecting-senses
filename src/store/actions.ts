@@ -29,7 +29,13 @@ export default (
 			langInfo.code,
 			langInfo.id,
 		);
-		context.commit( 'setSenses', senses );
+		const existingSenseIds = context.state.senses.map( ( sense ) => sense.senseId );
+		const filteredSenses = senses.filter(
+			( { senseId } ) => !context.state.skippedSenses.includes( senseId ),
+		).filter(
+			( { senseId } ) => !existingSenseIds.includes( senseId ),
+		);
+		context.commit( 'addSenses', filteredSenses );
 	},
 	async setSearchedItemCandidate(
 		context: ActionContext<RootState, RootState>, itemCandidate: ItemCandidate,
@@ -82,12 +88,18 @@ export default (
 		}
 		return claims[ languageCodePid ][ 0 ].mainsnak.datavalue.value as string;
 	},
+	goToNextSense( context: ActionContext<RootState, RootState> ): void {
+		context.commit( 'goToNextSense' );
+		if ( context.state.senses.length < 5 ) {
+			context.dispatch( 'queryForSenses', context.state.language );
+		}
+	},
 	skipSense(
 		context: ActionContext<RootState, RootState>,
 		currentSenseId: string,
 	): void {
 		context.commit( 'addToListOfSkippedSenses', currentSenseId );
-		context.commit( 'goToNextSense' ); // FIXME move to its own action to request more senses
+		context.dispatch( 'goToNextSense' );
 		decisionRepository.recordDecision( currentSenseId, DECISION.SKIPPED );
 	},
 	rejectSense(
