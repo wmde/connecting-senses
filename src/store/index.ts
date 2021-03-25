@@ -27,6 +27,7 @@ export interface RootState {
 	language: null | LanguageInfo,
 	senses: SenseInfo[],
 	searchedItemCandidate: ItemCandidate | null,
+	skippedSenses: string[],
 }
 
 function getInitialState(): RootState {
@@ -36,6 +37,7 @@ function getInitialState(): RootState {
 		language: null,
 		senses: [],
 		searchedItemCandidate: null,
+		skippedSenses: [],
 	};
 }
 
@@ -48,6 +50,8 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
 			services.get( 'searchEntityRepository' ),
 			services.get( 'getClaimsRepository' ),
 			services.get( 'sensesRepository' ),
+			services.get( 'claimWritingRepository' ),
+			services.get( 'decisionRepository' ),
 		),
 		modules: {
 			items: createItemModule( services ),

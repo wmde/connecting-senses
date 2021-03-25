@@ -4,12 +4,16 @@ import { ActionContext, ActionTree } from 'vuex';
 import SearchEntityRepository, { SearchOptions, SearchResult } from '@/data-access/SearchEntityRepository';
 import ReadingClaimsRepository, { ItemDataValue } from '@/data-access/ReadingClaimsRepository';
 import SensesRepository from '@/data-access/SensesRepository';
+import DecisionRepository, { DECISION } from '@/data-access/DecisionRepository';
+import ClaimWritingRepository from '@/data-access/ClaimWritingRepository';
 
 export default (
 	userRepository: UserRepository,
 	searchEntityRepository: SearchEntityRepository,
 	getClaimsRepository: ReadingClaimsRepository,
 	sensesRepository: SensesRepository,
+	claimWritingRepository: ClaimWritingRepository,
+	decisionRepository: DecisionRepository,
 ): ActionTree<RootState, RootState> => ( {
 	async initApp( context: ActionContext<RootState, RootState> ): Promise<void> {
 		const user = await userRepository.getCurrentUser();
@@ -77,5 +81,30 @@ export default (
 			return null;
 		}
 		return claims[ languageCodePid ][ 0 ].mainsnak.datavalue.value as string;
+	},
+	skipSense(
+		context: ActionContext<RootState, RootState>,
+		currentSenseId: string,
+	): void {
+		context.commit( 'addToListOfSkippedSenses', currentSenseId );
+		context.commit( 'goToNextSense' ); // FIXME move to its own action to request more senses
+		decisionRepository.recordDecision( currentSenseId, DECISION.SKIPPED );
+	},
+	rejectSense(
+		context: ActionContext<RootState, RootState>,
+		currentSenseId: string,
+	): void {
+		decisionRepository.recordDecision( currentSenseId, DECISION.REJECTED );
+		// FIXME: show reject undo
+	},
+	connectSense(
+		context: ActionContext<RootState, RootState>,
+		payload: { senseId: string, itemId: string },
+	): void {
+		const { senseId, itemId } = payload;
+		console.log( { senseId, itemId } );
+		claimWritingRepository.setClaim( itemId, senseId );
+		decisionRepository.recordDecision( senseId, DECISION.ACCEPTED );
+		// FIXME: show change undo
 	},
 } );

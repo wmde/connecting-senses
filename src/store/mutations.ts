@@ -18,4 +18,11 @@ export default {
 	setSearchedItemCandidate( state: RootState, itemCandidate: ItemCandidate ): void {
 		state.searchedItemCandidate = itemCandidate;
 	},
+	addToListOfSkippedSenses( state: RootState, senseId: string ): void {
+		state.skippedSenses.push( senseId );
+	},
+	goToNextSense( state: RootState ): void {
+		state.searchedItemCandidate = null;
+		state.senses.shift();
+	},
 };

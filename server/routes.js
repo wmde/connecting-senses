@@ -4,10 +4,11 @@ const createError = require( "http-errors" );
 const { PrismaClient } = require( "@prisma/client" );
 const { SensesRepository } = require( "./data-access" );
 const WDQSClient = require( "./wdqs-client" );
+const SetClaimRepository = require( "./SetClaimRepository" );
 
 const prisma = new PrismaClient();
 const router = express.Router();
-const senses = new SensesRepository( new WDQSClient( 
+const senses = new SensesRepository( new WDQSClient(
 	"https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 ) );
 
@@ -64,7 +65,7 @@ router.post( "/decision", async ( req, res, next ) => {
 		const result = await prisma.decisionRecord.create( {
 			data: { senseId, decision }
 		} );
-	
+
 		res.json( result );
 	} catch (e) {
 		return next( createError( 500, e ) )
@@ -75,14 +76,14 @@ router.post( "/decision", async ( req, res, next ) => {
 // Senses
 router.get( "/senses", async ( req, res, next ) => {
 	// TODO: Validation!!!
-	const { 
+	const {
 		lang: langCode,
-		qid: langQid 
+		qid: langQid
 	} = req.query;
 
 	try {
 		const result = await senses.get( langCode, langQid );
-	
+
 		res.json( result );
 	} catch (e) {
 		if ( e.response ) {
@@ -95,7 +96,20 @@ router.get( "/senses", async ( req, res, next ) => {
 
 		return next( createError( 500, e ) )
 	}
+} );
 
+router.post( '/connection-record', async ( req, res ) => {
+	const { senseId, itemId } = req.body;
+	const user = req && req.session && req.session.user;
+
+	const apiEndpoint = 'https://www.wikidata.org/w/api.php';
+
+	const repo = new SetClaimRepository( apiEndpoint );
+	try {
+		console.log( await repo.setClaim( user, itemId, senseId ) );
+	} catch ( e ) {
+		console.log( e );
+	}
 } );
 
 module.exports = router;

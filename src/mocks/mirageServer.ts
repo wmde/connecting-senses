@@ -9,6 +9,8 @@ export function makeServer( { environment = 'development' } = {} ): unknown {
 				return { displayName: 'TestUser (Mirage)' };
 			} );
 
+			this.post( '/decision' );
+
 			this.passthrough( 'https://www.wikidata.org/**' );
 			this.passthrough( 'https://query.wikidata.org/**' );
 		},
