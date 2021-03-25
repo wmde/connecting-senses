@@ -39,7 +39,7 @@ app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 
 	if( !err.expose ) {
-		console.error(`[${new Date().toISOString()}]` + err.message);
+		console.error(`[${new Date().toISOString()}] ` + err.stack);
 		return res.json({ 
 			message: 'Internal server error.'  
 		});

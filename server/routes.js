@@ -53,6 +53,7 @@ router.get( "/currentUser", function ( req, res, next ) {
 
 // Decision tracking
 router.post( "/decision", async ( req, res, next ) => {
+	// TODO: Validation!!!
 	const { senseId, decision } = req.body;
 	try {
 		const result = await prisma.decisionRecord.create( {
