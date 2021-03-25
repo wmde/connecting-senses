@@ -7,23 +7,24 @@ import FetchReadingEntityRepository from '@/data-access/FetchReadingEntityReposi
 
 export default function createServices(): ServiceContainer {
 	const services = new ServiceContainer();
+	const wikidataApiUrl = 'https://www.wikidata.org/w/api.php'; // maybe make configurable at some point
 
 	services.set( 'userRepository', new FetchUserRepository() );
 
 	services.set( 'searchEntityRepository', new FetchSearchEntityRepository(
 		'en', // our UI language is always English so far
-		'https://www.wikidata.org/w/api.php', // maybe make configurable at some point
+		wikidataApiUrl,
 	) );
 
 	services.set( 'getClaimsRepository', new FetchReadingClaimsRepository(
 		'en', // our UI language is always English so far
-		'https://www.wikidata.org/w/api.php', // maybe make configurable at some point
+		wikidataApiUrl,
 	) );
 
 	services.set( 'sensesRepository', new FetchSensesRepository() );
 
 	services.set( 'readingEntityRepository', new FetchReadingEntityRepository(
-		'https://www.wikidata.org/w/api.php',
+		wikidataApiUrl,
 	) );
 
 	return services;
