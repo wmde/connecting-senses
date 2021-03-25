@@ -8,4 +8,5 @@ export enum DECISION {
 
 export default interface DecisionRepository {
 	recordDecision( senseId: string, decision: DECISION ): Promise<void>;
+	undoDecision( senseId: string, decision: DECISION ): Promise<void>;
 }

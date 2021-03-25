@@ -10,7 +10,12 @@ export function makeServer( { environment = 'development' } = {} ): unknown {
 				return { displayName: 'TestUser (Mirage)' };
 			} );
 
-			this.post( '/decision' );
+			this.post( '/decision', () => {
+				return {};
+			} );
+			this.del( '/decision', () => {
+				return {};
+			} );
 			this.post( '/connection-record' );
 
 			this.get( '/senses', () => {

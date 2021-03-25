@@ -17,4 +17,20 @@ export default class FetchDecisionRepository implements DecisionRepository {
 		}
 	}
 
+	public async undoDecision( senseId: string, decision: DECISION ): Promise<void> {
+		try {
+			await fetch( '/decision', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify( {
+					senseId, decision,
+				} ),
+			} );
+		} catch ( e ) {
+			console.error( e );
+		}
+	}
+
 }

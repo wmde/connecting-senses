@@ -107,20 +107,26 @@ export default (
 		currentSenseId: string,
 	): void {
 		decisionRepository.recordDecision( currentSenseId, DECISION.REJECTED );
-		// FIXME: show reject undo
+		context.commit( 'setUndoState', 'rejection' );
+	},
+	undoRejection(
+		context: ActionContext<RootState, RootState>,
+		currentSenseId: string,
+	): void {
+		decisionRepository.undoDecision( currentSenseId, DECISION.REJECTED );
+		context.commit( 'setUndoState', 'rejectionUndone' );
 	},
 	async connectSense(
 		context: ActionContext<RootState, RootState>,
 		payload: { senseId: string, itemId: string },
 	): Promise<void> {
 		const { senseId, itemId } = payload;
-
 		try {
 			await claimWritingRepository.setClaim( itemId, senseId );
 			await decisionRepository.recordDecision( senseId, DECISION.ACCEPTED );
+			context.commit( 'setUndoState', 'connection' );
 		} catch ( e ) {
 			console.log( e );
 		}
-		// FIXME: show change undo
 	},
 } );
