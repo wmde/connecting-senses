@@ -67,7 +67,7 @@ export default defineComponent( {
 				'searchItemValues',
 				{
 					search: event.query,
-					limit: 12,
+					limit: 48,
 				},
 			);
 		},
