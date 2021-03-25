@@ -2,15 +2,17 @@ const express = require( "express" );
 const passport = require( "passport" );
 const createError = require( "http-errors" );
 const { PrismaClient } = require( "@prisma/client" );
-const { SensesRepository } = require( "./data-access" );
+const { SensesRepository, StatementsRepository, EntityConnectionRepository } = require( "./data-access" );
 const WDQSClient = require( "./wdqs-client" );
-const SetClaimRepository = require( "./SetClaimRepository" );
+const MWApiClient = require("./mw-api-client");
 
+// TODO: Clean this up by moving to service container and a decisions repository
 const prisma = new PrismaClient();
 const router = express.Router();
 const senses = new SensesRepository( new WDQSClient(
 	"https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 ) );
+
 
 // Serve Vue.js Application
 router.get( "/", function ( req, res ) {
@@ -98,19 +100,32 @@ router.get( "/senses", async ( req, res, next ) => {
 	}
 } );
 
-router.post( '/connection-record', async ( req, res ) => {
+router.post( '/entity-connection', async ( req, res, next ) => {
+	// TODO: Validation!!!
 	const { senseId, itemId } = req.body;
 	const user = req && req.session && req.session.user;
 
-	const apiEndpoint = 'https://www.wikidata.org/w/api.php';
+	// TODO: Clean this up by moving to service container and middleware
+	const statements = new StatementsRepository( new MWApiClient(
+		"https://test.wikidata.org/w/api.php",
+		{ assertuser: user }
+	) );
+	const entityConnections = new EntityConnectionRepository( statements );
 
-	const repo = new SetClaimRepository( apiEndpoint );
 	try {
-		const data = await repo.setClaim( user, itemId, senseId );
-		console.log( data );
-		res.send( data );
+		const result = await entityConnections.create( senseId, itemId, 'P84259' );
+
+		res.send( result );
 	} catch ( e ) {
-		console.log( e );
+		if ( e.response ) {
+			return next( createError( 424, e ) )
+		}
+
+		if ( e.request ) {
+			return next( createError( 503, e ) )
+		}
+
+		return next( createError( 500, e ) )
 	}
 } );
 
