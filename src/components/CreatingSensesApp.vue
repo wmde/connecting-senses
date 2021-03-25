@@ -10,6 +10,11 @@
 			<LanguagePicker v-else />
 			<Sense v-if="sense" :sense-info="sense" :language-code="languageCode" />
 			<ItemSearch v-if="sense" :language-code="languageCode" />
+			<ItemDisplay
+				v-if="searchedItemCandidate"
+				:item-candidate="searchedItemCandidate"
+				:language-code="languageCode"
+			/>
 		</main>
 	</div>
 </template>
@@ -23,9 +28,11 @@ import LanguagePicker from '@/components/LanguagePicker.vue';
 import { SenseInfo } from '@/data-access/SensesRepository';
 import Sense from '@/components/Sense.vue';
 import ItemSearch from '@/components/ItemSearch.vue';
+import ItemDisplay from '@/components/ItemDisplay.vue';
+import { ItemCandidate } from '@/store';
 
 export default defineComponent( {
-	components: { ItemSearch, Sense, Intro, LanguagePicker, UserTools, Login },
+	components: { ItemDisplay, ItemSearch, Sense, Intro, LanguagePicker, UserTools, Login },
 	computed: {
 		userDisplayName(): null | string {
 			return this.$store.getters.userDisplayName;
@@ -35,6 +42,9 @@ export default defineComponent( {
 		},
 		languageCode(): string | null {
 			return this.$store.getters.languageCode;
+		},
+		searchedItemCandidate(): ItemCandidate | null {
+			return this.$store.getters.searchedItemCandidate;
 		},
 	},
 } );

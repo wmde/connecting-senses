@@ -17,6 +17,8 @@ export interface ItemCandidate {
 	id: string;
 	label: string;
 	description: string;
+	classId?: string;
+	imageUrl?: string; // TODO: ignored for now, needs rendering via API?
 }
 
 export interface RootState {
@@ -48,7 +50,7 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
 			services.get( 'sensesRepository' ),
 		),
 		modules: {
-			items: createItemModule(),
+			items: createItemModule( services ),
 		},
 		getters,
 	} );

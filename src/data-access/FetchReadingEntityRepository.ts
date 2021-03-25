@@ -1,29 +1,26 @@
-import ReadingClaimsRepository, { Claim } from '@/data-access/ReadingClaimsRepository';
+import ReadingEntityRepository from '@/data-access/ReadingEntityRepository';
 import TechnicalProblem from '@/data-access/TechnicalProblem';
+import { Item } from '@/store/items';
 
-export default class FetchReadingClaimsRepository implements ReadingClaimsRepository {
-	private readonly forLanguageCode: string;
+export default class FetchReadingEntityRepository implements ReadingEntityRepository {
 	private readonly endpoint: string;
 
-	public constructor( languageCode: string, endpoint: string ) {
-		this.forLanguageCode = languageCode;
+	public constructor( endpoint: string ) {
 		this.endpoint = endpoint;
 	}
 
-	public async getClaims( entityID: string, propertyId?: string ): Promise<Record<string, Claim[]>> {
-		const params: Record<string, string> = {
-			action: 'wbgetclaims',
-			entity: entityID,
-			uselang: this.forLanguageCode,
+	public async getFingerPrintableEntities( ids: string[], langCode: string ): Promise<Record<string, Item>> {
+		const params: { [ key: string ]: string } = {
+			action: 'wbgetentities',
+			ids: ids.join( '|' ),
+			props: 'labels|descriptions|aliases',
+			languages: langCode,
+			uselang: langCode,
 			format: 'json',
 			formatversion: '2',
 			errorformat: 'plaintext',
 			origin: '*',
 		};
-		if ( propertyId ) {
-			params.property = propertyId;
-		}
-
 		const url = new URL( this.endpoint );
 		for ( const key in params ) {
 			url.searchParams.set( key, params[ key ] );
@@ -40,8 +37,6 @@ export default class FetchReadingClaimsRepository implements ReadingClaimsReposi
 		}
 
 		const data = await response.json();
-
-		return data.claims;
+		return data.entities;
 	}
-
 }

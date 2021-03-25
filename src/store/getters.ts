@@ -1,4 +1,4 @@
-import { RootState } from '@/store/index';
+import { ItemCandidate, RootState } from '@/store/index';
 import { SenseInfo } from '@/data-access/SensesRepository';
 
 export default {
@@ -20,5 +20,8 @@ export default {
 			return null;
 		}
 		return rootState.senses[ 0 ];
+	},
+	searchedItemCandidate( rootState: RootState ): ItemCandidate | null {
+		return rootState.searchedItemCandidate;
 	},
 };

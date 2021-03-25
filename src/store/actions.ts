@@ -2,7 +2,7 @@ import UserRepository from '@/data-access/UserRepository';
 import { ItemCandidate, LanguageInfo, RootState } from '@/store/index';
 import { ActionContext, ActionTree } from 'vuex';
 import SearchEntityRepository, { SearchOptions, SearchResult } from '@/data-access/SearchEntityRepository';
-import ReadingClaimsRepository from '@/data-access/ReadingClaimsRepository';
+import ReadingClaimsRepository, { ItemDataValue } from '@/data-access/ReadingClaimsRepository';
 import SensesRepository from '@/data-access/SensesRepository';
 
 export default (
@@ -31,6 +31,18 @@ export default (
 		context: ActionContext<RootState, RootState>, itemCandidate: ItemCandidate,
 	): Promise<void> {
 		context.commit( 'setSearchedItemCandidate', itemCandidate );
+
+		const claims = await getClaimsRepository.getClaims( itemCandidate.id );
+		if ( claims.P31 && claims.P31[ 0 ].mainsnak.snaktype === 'value' ) {
+			itemCandidate.classId = ( claims.P31[ 0 ].mainsnak.datavalue as ItemDataValue ).value.id;
+		} else if ( claims.P279 && claims.P279[ 0 ].mainsnak.snaktype === 'value' ) {
+			itemCandidate.classId = ( claims.P279[ 0 ].mainsnak.datavalue as ItemDataValue ).value.id;
+		}
+		context.commit( 'setSearchedItemCandidate', itemCandidate );
+		context.dispatch( 'ensureItemLabel', {
+			itemId: itemCandidate.classId,
+			languageCode: context.getters.languageCode,
+		} );
 	},
 	async searchItemValues(
 		context: ActionContext<RootState, RootState>,
