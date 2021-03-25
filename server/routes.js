@@ -106,7 +106,9 @@ router.post( '/connection-record', async ( req, res ) => {
 
 	const repo = new SetClaimRepository( apiEndpoint );
 	try {
-		console.log( await repo.setClaim( user, itemId, senseId ) );
+		const data = await repo.setClaim( user, itemId, senseId );
+		console.log( data );
+		res.send( data );
 	} catch ( e ) {
 		console.log( e );
 	}

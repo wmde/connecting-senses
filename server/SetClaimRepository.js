@@ -68,7 +68,14 @@ class SetClaimRepository {
 
 		let response;
 		try {
-			response = await axios.post( this.endpoint, params, { withCredentials: true } );
+			// response = await axios.post( this.endpoint, params, { withCredentials: true } );
+			response = await axios( {
+				url: this.endpoint,
+				method: 'post',
+				responseType: 'json',
+				data: params,
+				withCredentials: true,
+			} );
 		} catch ( e ) {
 			console.error(e);
 			throw e;
@@ -76,6 +83,7 @@ class SetClaimRepository {
 
 		console.log( 'Class: FetchClaimWritingRepository, Function: setClaim, Line 83 response(): '
 			, response );
+		return response.data;
 	}
 }
 
