@@ -63,7 +63,39 @@ class StatementsRepository {
     }
 }
 
+class EntityConnectionRepository {
+    constructor( statements ){
+        if ( !statements ) {
+            throw new Error('Cannot create an entity connection repository: missing statements repository');
+        }
+
+        this.statements = statements;
+        this.connections = {};
+    }
+
+    async create( sourceEntityId, targetEntityId, pid ){
+        const snak = {
+            snaktype: 'value',
+            property: pid,
+            datavalue: {
+                type: 'wikibase-entityid',
+                value: {
+                    id: targetEntityId,
+                },
+            },
+            rank: 'normal'
+        }
+
+        const result = await this.statements.create(sourceEntityId, snak);
+
+        this.connections.push(result.claim.id);
+
+        return result;
+    }
+}
+
 module.exports = {
     SensesRepository,
-    StatementsRepository
+    StatementsRepository,
+    EntityConnectionRepository
 }
