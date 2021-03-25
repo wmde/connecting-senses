@@ -1,3 +1,4 @@
+const { v4 } = require('uuid');
 const queries = require('./sparql-queries');
 
 class SensesRepository {
@@ -33,4 +34,36 @@ class SensesRepository {
     }
 }
 
-module.exports = { SensesRepository }
+class StatementsRepository {
+    constructor( mwApi ) {
+        if ( !mwApi ) {
+            throw new Error('Cannot create a claims repository: missing mwApi paramater');
+        }
+        this.mwApi = mwApi;
+    }
+
+    async create( entityId, snak ) {
+        const claim = {
+            id: entityId + '$' + v4(),
+            type: "statement",
+            mainsnak: snak
+        }
+
+        const tokens = await this.mwApi.tokens();
+
+        // Error handling is delegated to the caller. 
+        // This function will raise all excpetions that axios may raise. 
+        // See: https://www.npmjs.com/package/axios#handling-errors
+        return await this.mwApi.post('wbsetclaim', {
+            claim: JSON.stringify(claim),
+            ignoreduplicatemainsnak: '1',
+            tags: 'Connecting-Senses',
+            token: tokens.csrftoken
+        }, { withCredentials: true } );
+    }
+}
+
+module.exports = {
+    SensesRepository,
+    StatementsRepository
+}
