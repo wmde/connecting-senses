@@ -42,7 +42,7 @@ router.post( "/logout" , function ( req, res ) {
 	res.redirect( req.baseUrl + "/" );
 } );
 
-router.get( "/currentUser", function ( req, res ) {
+router.get( "/currentUser", function ( req, res, next ) {
 	const user  = req && req.session && req.session.user;
 	if (!user) {
 		return next( createError( 401 ) );
