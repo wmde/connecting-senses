@@ -102,6 +102,9 @@ router.post( '/entity-connection', async ( req, res, next ) => {
 	// TODO: Validation!!!
 	const { senseId, itemId } = req.body;
 	const user = req && req.session && req.session.user;
+	if (!user) {
+		return next( createError( 401 ) );
+	}
 
 	// TODO: Clean this up by moving to service container and middleware
 	const statements = new StatementsRepository( new MWApiClient(
