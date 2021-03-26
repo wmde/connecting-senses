@@ -2,7 +2,7 @@ export interface SenseInfo {
 	senseId: string,
 	gloss: string,
 	lemma: string,
-	// TODO: more info about lemma? e.g. Genus?, More senses?
+	additionalSenses?: { senseId: string, gloss: string, connectedItemId?: string }[]
 }
 
 export default interface SensesRepository {

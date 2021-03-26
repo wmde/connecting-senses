@@ -1,6 +1,5 @@
-import ReadingEntityRepository from '@/data-access/ReadingEntityRepository';
+import ReadingEntityRepository, { Entity } from '@/data-access/ReadingEntityRepository';
 import TechnicalProblem from '@/data-access/TechnicalProblem';
-import { Item } from '@/store/items';
 
 export default class FetchReadingEntityRepository implements ReadingEntityRepository {
 	private readonly endpoint: string;
@@ -9,7 +8,7 @@ export default class FetchReadingEntityRepository implements ReadingEntityReposi
 		this.endpoint = endpoint;
 	}
 
-	public async getFingerPrintableEntities( ids: string[], langCode: string ): Promise<Record<string, Item>> {
+	public async getFingerPrintableEntities( ids: string[], langCode: string ): Promise<Record<string, Entity>> {
 		const params: { [ key: string ]: string } = {
 			action: 'wbgetentities',
 			ids: ids.join( '|' ),
