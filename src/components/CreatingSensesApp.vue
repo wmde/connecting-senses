@@ -15,6 +15,7 @@
 					v-if="searchedItemCandidate"
 					:item-candidate="searchedItemCandidate"
 					:language-code="languageCode"
+					:sense="sense"
 				/>
 				<DecisionButtons
 					v-if="sense"
