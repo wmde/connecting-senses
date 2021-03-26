@@ -6,6 +6,8 @@ import ReadingClaimsRepository, { ItemDataValue } from '@/data-access/ReadingCla
 import SensesRepository from '@/data-access/SensesRepository';
 import DecisionRepository, { DECISION } from '@/data-access/DecisionRepository';
 import ClaimWritingRepository from '@/data-access/ClaimWritingRepository';
+import ReadingEntityRepository, { Lexeme } from '@/data-access/ReadingEntityRepository';
+import { TermList } from '@wmde/wikibase-datamodel-types';
 
 export default (
 	userRepository: UserRepository,
@@ -14,6 +16,7 @@ export default (
 	sensesRepository: SensesRepository,
 	claimWritingRepository: ClaimWritingRepository,
 	decisionRepository: DecisionRepository,
+	readingEntityRepository: ReadingEntityRepository,
 ): ActionTree<RootState, RootState> => ( {
 	async initApp( context: ActionContext<RootState, RootState> ): Promise<void> {
 		const user = await userRepository.getCurrentUser();
@@ -36,6 +39,41 @@ export default (
 			( { senseId } ) => !existingSenseIds.includes( senseId ),
 		);
 		context.commit( 'addSenses', filteredSenses );
+		context.dispatch( 'hydrateCurrentSense' );
+	},
+	async hydrateCurrentSense( context: ActionContext<RootState, RootState> ): Promise<void> {
+		const currentSense = context.state.senses[ 0 ];
+		if ( currentSense.additionalSenses ) {
+			// already hydrated
+			return;
+		}
+		const langCode = ( context.state.language as LanguageInfo ).code;
+		const lexemeIdFromSense = currentSense.senseId.split( '-' )[ 0 ];
+		const entityData = await readingEntityRepository.getFingerPrintableEntities(
+			[ lexemeIdFromSense ],
+			langCode,
+		);
+		const lexemeSenses = ( entityData[ lexemeIdFromSense ] as Lexeme ).senses;
+		console.log( lexemeSenses );
+		if ( lexemeSenses.length === 1 ) {
+			return;
+		}
+		currentSense.additionalSenses = lexemeSenses
+			.filter( ( sense: { id: string } ) => sense.id !== currentSense.senseId )
+			.map( ( sense: { id: string, glosses: TermList, claims: Record<string, unknown> } ) => {
+				const additionalSenseData = {
+					senseId: sense.id,
+					gloss: sense.glosses[ langCode ]?.value, // P5137
+				};
+				// if ( sense.claims.P5137 ) {
+				//
+				// }
+				return additionalSenseData;
+			} );
+		if ( context.state.senses[ 0 ].senseId === currentSense.senseId ) {
+			context.state.senses[ 0 ] = currentSense;
+		}
+
 	},
 	async setSearchedItemCandidate(
 		context: ActionContext<RootState, RootState>, itemCandidate: ItemCandidate,
@@ -90,6 +128,7 @@ export default (
 	},
 	goToNextSense( context: ActionContext<RootState, RootState> ): void {
 		context.commit( 'goToNextSense' );
+		context.dispatch( 'hydrateCurrentSense' );
 		if ( context.state.senses.length < 5 ) {
 			context.dispatch( 'queryForSenses', context.state.language );
 		}
