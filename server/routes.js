@@ -106,7 +106,7 @@ router.post( '/entity-connection', async ( req, res, next ) => {
 	// TODO: Clean this up by moving to service container and middleware
 	const statements = new StatementsRepository( new MWApiClient(
 		process.env.MW_API_URL,
-		{ assertuser: user }
+		{ assertuser: user.displayName }
 	) );
 	const entityConnections = new EntityConnectionRepository( statements );
 	const connectingPID = process.env.ITEM_CONNECTION_PID;
