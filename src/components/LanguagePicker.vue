@@ -1,7 +1,7 @@
 <template>
 	<div class="cs-language-selector">
 		<div v-if="!language">
-			<label><span>Select a language for the lexemes that you want to see</span>
+			<label><span>Select a language-Item for the lexemes that you want to see</span>
 				<AutoComplete
 					v-model="inputValue"
 					:suggestions="autoCompleteSuggestions"
