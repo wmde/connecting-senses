@@ -2,9 +2,14 @@ const express = require( "express" );
 const passport = require( "passport" );
 const createError = require( "http-errors" );
 const { PrismaClient } = require( "@prisma/client" );
+const { SensesRepository } = require( "./data-access" );
+const WDQSClient = require( "./wdqs-client" );
 
 const prisma = new PrismaClient();
 const router = express.Router();
+const senses = new SensesRepository( new WDQSClient( 
+	"https://query.wikidata.org/bigdata/namespace/wdq/sparql"
+) );
 
 // Serve Vue.js Application
 router.get( "/", function ( req, res ) {
@@ -53,6 +58,7 @@ router.get( "/currentUser", function ( req, res, next ) {
 
 // Decision tracking
 router.post( "/decision", async ( req, res, next ) => {
+	// TODO: Validation!!!
 	const { senseId, decision } = req.body;
 	try {
 		const result = await prisma.decisionRecord.create( {
@@ -61,6 +67,32 @@ router.post( "/decision", async ( req, res, next ) => {
 	
 		res.json( result );
 	} catch (e) {
+		return next( createError( 500, e ) )
+	}
+
+} );
+
+// Senses
+router.get( "/senses", async ( req, res, next ) => {
+	// TODO: Validation!!!
+	const { 
+		lang: langCode,
+		qid: langQid 
+	} = req.query;
+
+	try {
+		const result = await senses.get( langCode, langQid );
+	
+		res.json( result );
+	} catch (e) {
+		if ( e.response ) {
+			return next( createError( 424, e ) )
+		}
+
+		if ( e.request ) {
+			return next( createError( 503, e ) )
+		}
+
 		return next( createError( 500, e ) )
 	}
 

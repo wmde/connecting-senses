@@ -20,9 +20,7 @@ export default function createServices(): ServiceContainer {
 		'https://www.wikidata.org/w/api.php', // maybe make configurable at some point
 	) );
 
-	services.set( 'sensesRepository', new FetchSensesRepository(
-		'https://query.wikidata.org/bigdata/namespace/wdq/sparql',
-	) );
+	services.set( 'sensesRepository', new FetchSensesRepository() );
 
 	services.set( 'readingEntityRepository', new FetchReadingEntityRepository(
 		'https://www.wikidata.org/w/api.php',
