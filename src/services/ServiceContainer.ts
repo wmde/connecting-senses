@@ -3,13 +3,17 @@ import SearchEntityRepository from '@/data-access/SearchEntityRepository';
 import ReadingClaimsRepository from '@/data-access/ReadingClaimsRepository';
 import SensesRepository from '@/data-access/SensesRepository';
 import ReadingEntityRepository from '@/data-access/ReadingEntityRepository';
+import ClaimWritingRepository from '@/data-access/ClaimWritingRepository';
+import DecisionRepository from '@/data-access/DecisionRepository';
 
 export interface Services {
 	userRepository: UserRepository;
+	decisionRepository: DecisionRepository;
 	searchEntityRepository: SearchEntityRepository,
 	getClaimsRepository: ReadingClaimsRepository,
 	sensesRepository: SensesRepository,
 	readingEntityRepository: ReadingEntityRepository,
+	claimWritingRepository: ClaimWritingRepository,
 }
 
 export default class ServiceContainer {

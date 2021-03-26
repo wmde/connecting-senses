@@ -2,14 +2,15 @@ const express = require( "express" );
 const passport = require( "passport" );
 const createError = require( "http-errors" );
 const { PrismaClient } = require( "@prisma/client" );
-const { SensesRepository } = require( "./data-access" );
+const { SensesRepository, StatementsRepository, EntityConnectionRepository } = require( "./data-access" );
 const WDQSClient = require( "./wdqs-client" );
+const MWApiClient = require("./mw-api-client");
 
+// TODO: Clean this up by moving to service container and a decisions repository
 const prisma = new PrismaClient();
 const router = express.Router();
-const senses = new SensesRepository( new WDQSClient( 
-	"https://query.wikidata.org/bigdata/namespace/wdq/sparql"
-) );
+const senses = new SensesRepository( new WDQSClient( process.env.WDQS_ENDPOINT ) );
+
 
 // Serve Vue.js Application
 router.get( "/", function ( req, res ) {
@@ -64,7 +65,7 @@ router.post( "/decision", async ( req, res, next ) => {
 		const result = await prisma.decisionRecord.create( {
 			data: { senseId, decision }
 		} );
-	
+
 		res.json( result );
 	} catch (e) {
 		return next( createError( 500, e ) )
@@ -75,14 +76,14 @@ router.post( "/decision", async ( req, res, next ) => {
 // Senses
 router.get( "/senses", async ( req, res, next ) => {
 	// TODO: Validation!!!
-	const { 
+	const {
 		lang: langCode,
-		qid: langQid 
+		qid: langQid
 	} = req.query;
 
 	try {
 		const result = await senses.get( langCode, langQid );
-	
+
 		res.json( result );
 	} catch (e) {
 		if ( e.response ) {
@@ -95,7 +96,39 @@ router.get( "/senses", async ( req, res, next ) => {
 
 		return next( createError( 500, e ) )
 	}
+} );
 
+router.post( '/entity-connection', async ( req, res, next ) => {
+	// TODO: Validation!!!
+	const { senseId, itemId } = req.body;
+	const user = req && req.session && req.session.user;
+	if (!user) {
+		return next( createError( 401 ) );
+	}
+
+	// TODO: Clean this up by moving to service container and middleware
+	const statements = new StatementsRepository( new MWApiClient(
+		process.env.MW_API_URL,
+		{ assertuser: user.displayName }
+	) );
+	const entityConnections = new EntityConnectionRepository( statements );
+	const connectingPID = process.env.ITEM_CONNECTION_PID;
+
+	try {
+		const result = await entityConnections.create( senseId, itemId, connectingPID );
+
+		res.send( result );
+	} catch ( e ) {
+		if ( e.response ) {
+			return next( createError( 424, e ) )
+		}
+
+		if ( e.request ) {
+			return next( createError( 503, e ) )
+		}
+
+		return next( createError( 500, e ) )
+	}
 } );
 
 module.exports = router;

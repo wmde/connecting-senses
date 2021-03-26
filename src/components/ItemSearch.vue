@@ -53,8 +53,16 @@ export default defineComponent( {
 			type: String,
 			required: true,
 		},
+		sense: {
+			type: Object,
+			required: true,
+		},
 	},
-
+	watch: {
+		sense() {
+			this.inputValue = '';
+		},
+	},
 } );
 </script>
 
