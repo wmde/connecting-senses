@@ -1,6 +1,6 @@
 <template>
 	<div class="cs-language-selector">
-		<form v-if="!language">
+		<div v-if="!language">
 			<label><span>Select a language for the lexemes that you want to see</span>
 				<AutoComplete
 					v-model="inputValue"
@@ -19,7 +19,7 @@
 				</AutoComplete>
 			</label>
 			<span class="cs-language-selector__error" v-if="error">{{ error }}</span>
-		</form>
+		</div>
 		<div v-else>Lexeme language: {{ language }}</div>
 	</div>
 </template>
