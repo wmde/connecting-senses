@@ -70,7 +70,6 @@ class EntityConnectionRepository {
         }
 
         this.statements = statements;
-        this.connections = {};
     }
 
     async create( sourceEntityId, targetEntityId, pid ){
@@ -87,8 +86,6 @@ class EntityConnectionRepository {
         }
 
         const result = await this.statements.create(sourceEntityId, snak);
-
-        this.connections.push(result.claim.id);
 
         return result;
     }
