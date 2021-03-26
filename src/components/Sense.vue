@@ -18,13 +18,18 @@
 				<Button
 					class="p-button-outlined p-button-rounded p-button-secondary"
 					@click="additionalSensesOpen = !additionalSensesOpen"
-					:icon="['pi', additionalSensesOpen ? 'pi-chevron-up': 'pi-chevron-down']" iconPos="right"
+					:icon="buttonIcon" iconPos="right"
 				/>
 			</div>
 			<table v-if="additionalSensesOpen" class="cs-sense__sense-table">
 				<tr v-for="sense in extraSenses" :key="sense.senseId">
 					<th><a :href="sense.senseUrl">Sense</a></th>
-					<td :lang="languageCode" dir="auto">{{ sense.gloss }}</td>
+					<td :lang="languageCode" dir="auto">
+						{{ sense.gloss }}
+						<div v-if="sense.connectedItemId">
+							Item for this sense: <a :href="sense.connectedItemUrl">{{ sense.connectedItemLabel }}</a>
+						</div>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -34,7 +39,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Button from 'primevue/button';
-import { SenseInfo } from '@/data-access/SensesRepository';
+import { extraSenseInfo, SenseInfo } from '@/data-access/SensesRepository';
+
+interface hydratedExtraSenseInfo extends extraSenseInfo {
+	senseUrl: string;
+	connectedItemLabel?: string;
+	connectedItemUrl?: string;
+}
 
 export default defineComponent( {
 	components: { Button },
@@ -54,19 +65,33 @@ export default defineComponent( {
 		},
 	},
 	computed: {
-		extraSenses(): unknown {
+		extraSenses(): hydratedExtraSenseInfo[] | boolean {
 			if ( !this.senseInfo.additionalSenses || this.senseInfo.additionalSenses.length === 0 ) {
 				return false;
 			}
 			return this.senseInfo.additionalSenses.map( ( senseData ) => {
-				return {
+				const hydratedSenseData: hydratedExtraSenseInfo = {
 					...senseData,
 					senseUrl: 'https://www.wikidata.org/entity/' + senseData.senseId,
 				};
+
+				if ( senseData.connectedItemId ) {
+					const connectedItemLabel = this.$store.getters.getItemLabel(
+						senseData.connectedItemId,
+						this.languageCode,
+					);
+					hydratedSenseData.connectedItemLabel = connectedItemLabel ?? senseData.connectedItemId;
+					hydratedSenseData.connectedItemUrl = 'https://www.wikidata.org/wiki/' + senseData.connectedItemId;
+				}
+
+				return hydratedSenseData;
 			} );
 		},
 		senseUrl(): string {
 			return 'https://www.wikidata.org/entity/' + this.senseInfo.senseId;
+		},
+		buttonIcon(): string {
+			return [ 'pi', this.additionalSensesOpen ? 'pi-chevron-up' : 'pi-chevron-down' ].join( ' ' );
 		},
 	},
 } );
