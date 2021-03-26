@@ -14,7 +14,7 @@ module.exports = class WDQSClient {
         })
     }
 
-    async submit( sparql, params ){
+    async submit( sparql ){
         // Error handling is delegated to the caller. 
         // This function will raise all excpetions that axios may raise. 
         // See: https://www.npmjs.com/package/axios#handling-errors
