@@ -97,14 +97,18 @@ export default (
 		decisionRepository.recordDecision( currentSenseId, DECISION.REJECTED );
 		// FIXME: show reject undo
 	},
-	connectSense(
+	async connectSense(
 		context: ActionContext<RootState, RootState>,
 		payload: { senseId: string, itemId: string },
-	): void {
+	): Promise<void> {
 		const { senseId, itemId } = payload;
-		console.log( { senseId, itemId } );
-		claimWritingRepository.setClaim( itemId, senseId );
-		decisionRepository.recordDecision( senseId, DECISION.ACCEPTED );
+
+		try {
+			await claimWritingRepository.setClaim( itemId, senseId );
+			await decisionRepository.recordDecision( senseId, DECISION.ACCEPTED );
+		} catch ( e ) {
+			console.log( e );
+		}
 		// FIXME: show change undo
 	},
 } );

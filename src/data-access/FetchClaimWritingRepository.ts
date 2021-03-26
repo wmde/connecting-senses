@@ -1,4 +1,5 @@
 import ClaimWritingRepository from '@/data-access/ClaimWritingRepository';
+import TechnicalProblem from './TechnicalProblem';
 
 export default class FetchClaimWritingRepository implements ClaimWritingRepository {
 	private readonly endpoint: string;
@@ -8,8 +9,10 @@ export default class FetchClaimWritingRepository implements ClaimWritingReposito
 	}
 
 	public async setClaim( itemId: string, senseId: string ): Promise<void> {
+		let response: Response;
+
 		try {
-			await fetch( '/connection-record', {
+			response = await fetch( '/entity-connection', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -19,8 +22,11 @@ export default class FetchClaimWritingRepository implements ClaimWritingReposito
 				} ),
 			} );
 		} catch ( e ) {
-			console.error( e );
+			throw new TechnicalProblem( 'Network error' );
 		}
 
+		if ( !response.ok ) {
+			throw new TechnicalProblem( `${response.status}: ${response.statusText}` );
+		}
 	}
 }
