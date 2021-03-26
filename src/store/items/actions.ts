@@ -1,6 +1,6 @@
 import { RootState } from '@/store';
 import { ActionContext, ActionTree } from 'vuex';
-import { ItemsState } from '@/store/items/index';
+import { Item, ItemsState } from '@/store/items/index';
 import ReadingEntityRepository from '@/data-access/ReadingEntityRepository';
 
 export default ( readingEntityRepository: ReadingEntityRepository ): ActionTree<ItemsState, RootState> => ( {
@@ -11,12 +11,13 @@ export default ( readingEntityRepository: ReadingEntityRepository ): ActionTree<
 		if ( context.getters.getItemLabel( itemId, languageCode ) ) {
 			return;
 		}
-		const items = await readingEntityRepository.getFingerPrintableEntities( [ itemId ], languageCode );
+		const items = await readingEntityRepository
+			.getFingerPrintableEntities( [ itemId ], languageCode ) as Record<string, Item>;
 		context.commit( 'setItemTerms', {
 			languageCode,
 			id: itemId,
-			label: items[ itemId ].labels[ languageCode ].value,
-			description: items[ itemId ].descriptions[ languageCode ].value,
+			label: items[ itemId ].labels[ languageCode ]?.value,
+			description: items[ itemId ].descriptions[ languageCode ]?.value,
 		} );
 	},
 } );
