@@ -9,9 +9,7 @@ const MWApiClient = require("./mw-api-client");
 // TODO: Clean this up by moving to service container and a decisions repository
 const prisma = new PrismaClient();
 const router = express.Router();
-const senses = new SensesRepository( new WDQSClient(
-	"https://query.wikidata.org/bigdata/namespace/wdq/sparql"
-) );
+const senses = new SensesRepository( new WDQSClient( process.env.WDQS_ENDPOINT ) );
 
 
 // Serve Vue.js Application
@@ -107,13 +105,14 @@ router.post( '/entity-connection', async ( req, res, next ) => {
 
 	// TODO: Clean this up by moving to service container and middleware
 	const statements = new StatementsRepository( new MWApiClient(
-		"https://test.wikidata.org/w/api.php",
+		process.env.MW_API_URL,
 		{ assertuser: user }
 	) );
 	const entityConnections = new EntityConnectionRepository( statements );
+	const connectingPID = process.env.ITEM_CONNECTION_PID;
 
 	try {
-		const result = await entityConnections.create( senseId, itemId, 'P84259' );
+		const result = await entityConnections.create( senseId, itemId, connectingPID );
 
 		res.send( result );
 	} catch ( e ) {
