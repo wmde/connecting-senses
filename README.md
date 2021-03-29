@@ -1,6 +1,6 @@
 # Connecting Senses
 
-A tool for connecting Lexeme Senses with the corresponding Wikidata items.
+A tool for connecting Lexeme Senses with the corresponding Wikidata Items.
 
 # Usage
 
