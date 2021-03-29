@@ -20,4 +20,4 @@ Note: This tool uses Node 10 and npm 6.14.
     `npm run serve`
 - For backend development run:
     `npx nodemon --inspect server.js`
-Per default, the tool will be running locally at `http://localhost:8080/ `.
+Per default, the frontend development server will be running locally at `http://localhost:8080/ `, and the backend development server will run at port `5000`.
