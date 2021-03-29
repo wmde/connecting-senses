@@ -7,7 +7,7 @@ A tool for connecting Lexeme Senses with the corresponding Wikidata Items.
 Authentication is done via OAuth with Wikidata.
 
 Select an Item for the language in which you would like to receive senses.
-You will then receive a Lemma and a Sense. Search for the corresponding wikidata item in the search field.
+You will then receive a Lemma and a Sense. Search for the corresponding Wikidata Item in the search field.
 You may decide between connecting the item to this sense in Wikidata, skipping to the next sense or removing this sense from suggestion altogether.
 
 # Run development instance
