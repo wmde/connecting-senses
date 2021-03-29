@@ -8,17 +8,32 @@
 			<Intro />
 			<Login v-if="userDisplayName === null" />
 			<LanguagePicker v-else />
-			<Sense v-if="sense" :sense-info="sense" :language-code="languageCode" />
-			<ItemSearch v-if="sense" :language-code="languageCode" :sense="sense" />
-			<ItemDisplay
-				v-if="searchedItemCandidate"
-				:item-candidate="searchedItemCandidate"
-				:language-code="languageCode"
+			<div v-if="undo === null">
+				<Sense v-if="sense" :sense-info="sense" :language-code="languageCode" />
+				<ItemSearch v-if="sense" :language-code="languageCode" :sense="sense" />
+				<ItemDisplay
+					v-if="searchedItemCandidate"
+					:item-candidate="searchedItemCandidate"
+					:language-code="languageCode"
+				/>
+				<DecisionButtons
+					v-if="sense"
+					:senseId="sense.senseId"
+					:item-id="searchedItemCandidate?.id ?? null"
+				/>
+			</div>
+			<UndoConnection
+				v-if="undo === 'connection'"
+				:sense-info="sense"
+				:connected-item="searchedItemCandidate"
 			/>
-			<DecisionButtons
-				v-if="sense"
-				:senseId="sense.senseId"
-				:item-id="searchedItemCandidate?.id ?? null"
+			<UndoRejection
+				v-if="undo === 'rejection'"
+				:sense-info="sense"
+			/>
+			<RejectionUndone
+				v-if="undo === 'rejectionUndone'"
+				:sense-info="sense"
 			/>
 		</main>
 	</div>
@@ -34,11 +49,26 @@ import { SenseInfo } from '@/data-access/SensesRepository';
 import Sense from '@/components/Sense.vue';
 import ItemSearch from '@/components/ItemSearch.vue';
 import ItemDisplay from '@/components/ItemDisplay.vue';
-import { ItemCandidate } from '@/store';
+import { ItemCandidate, UndoState } from '@/store';
 import DecisionButtons from '@/components/DecisionButtons.vue';
+import UndoConnection from '@/components/UndoConnection.vue';
+import UndoRejection from '@/components/UndoRejection.vue';
+import RejectionUndone from '@/components/RejectionUndone.vue';
 
 export default defineComponent( {
-	components: { DecisionButtons, ItemDisplay, ItemSearch, Sense, Intro, LanguagePicker, UserTools, Login },
+	components: {
+		RejectionUndone,
+		UndoRejection,
+		UndoConnection,
+		DecisionButtons,
+		ItemDisplay,
+		ItemSearch,
+		Sense,
+		Intro,
+		LanguagePicker,
+		UserTools,
+		Login,
+	},
 	computed: {
 		userDisplayName(): null | string {
 			return this.$store.getters.userDisplayName;
@@ -51,6 +81,9 @@ export default defineComponent( {
 		},
 		searchedItemCandidate(): ItemCandidate | null {
 			return this.$store.getters.searchedItemCandidate;
+		},
+		undo(): UndoState {
+			return this.$store.state.undo;
 		},
 	},
 } );
