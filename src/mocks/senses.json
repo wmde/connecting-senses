@@ -1,0 +1,27 @@
+[
+  {
+   "senseId": "L34505-S1",
+    "gloss": "a person from Bulgaria",
+    "lemma": "Bulgarian"
+  },
+  {
+    "senseId": "L12297-S1",
+    "gloss": "Long, thin piece of land, or of any material.",
+    "lemma": "strip"
+  },
+  {
+    "senseId": "L3817-S4",
+    "gloss": "plaster cast",
+    "lemma": "pot"
+  },
+  {
+    "senseId": "L36274-S1",
+    "gloss": "something of great importance",
+    "lemma": "imperative"
+  },
+  {
+    "senseId": "L101940-S1",
+    "gloss": "poetry with 11 syllables per line",
+    "lemma": "hendecasyllable"
+  }
+]
