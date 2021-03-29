@@ -56,6 +56,7 @@ export default function createStore( services: ServiceContainer ): Store<RootSta
 			services.get( 'sensesRepository' ),
 			services.get( 'claimWritingRepository' ),
 			services.get( 'decisionRepository' ),
+			services.get( 'readingEntityRepository' ),
 		),
 		modules: {
 			items: createItemModule( services ),
