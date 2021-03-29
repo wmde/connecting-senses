@@ -7,7 +7,6 @@ import SensesRepository from '@/data-access/SensesRepository';
 import DecisionRepository, { DECISION } from '@/data-access/DecisionRepository';
 import ClaimWritingRepository from '@/data-access/ClaimWritingRepository';
 import ReadingEntityRepository, { Lexeme } from '@/data-access/ReadingEntityRepository';
-import { TermList } from '@wmde/wikibase-datamodel-types';
 
 export default (
 	userRepository: UserRepository,
@@ -54,20 +53,27 @@ export default (
 			langCode,
 		);
 		const lexemeSenses = ( entityData[ lexemeIdFromSense ] as Lexeme ).senses;
-		console.log( lexemeSenses );
 		if ( lexemeSenses.length === 1 ) {
 			return;
 		}
 		currentSense.additionalSenses = lexemeSenses
-			.filter( ( sense: { id: string } ) => sense.id !== currentSense.senseId )
-			.map( ( sense: { id: string, glosses: TermList, claims: Record<string, unknown> } ) => {
-				const additionalSenseData = {
+			.filter( ( sense ) => sense.id !== currentSense.senseId )
+			.map( ( sense ) => {
+				const additionalSenseData: { senseId: string, gloss: string, connectedItemId?: string } = {
 					senseId: sense.id,
-					gloss: sense.glosses[ langCode ]?.value, // P5137
+					gloss: sense.glosses[ langCode ]?.value,
 				};
-				// if ( sense.claims.P5137 ) {
-				//
-				// }
+				if ( sense.claims.P5137 ) {
+					const itemForSenseStatement = sense.claims.P5137;
+					additionalSenseData.connectedItemId = (
+						// TODO: bad type definition in @wmde/wikibase-datamodel-types
+						itemForSenseStatement[ 0 ].mainsnak.datavalue as unknown as ItemDataValue
+					)?.value.id;
+					context.dispatch( 'ensureItemLabel', {
+						itemId: additionalSenseData.connectedItemId,
+						languageCode: langCode,
+					} );
+				}
 				return additionalSenseData;
 			} );
 		if ( context.state.senses[ 0 ].senseId === currentSense.senseId ) {

@@ -1,8 +1,13 @@
+export interface extraSenseInfo {
+	senseId: string,
+	gloss: string,
+	connectedItemId?: string
+}
 export interface SenseInfo {
 	senseId: string,
 	gloss: string,
 	lemma: string,
-	additionalSenses?: { senseId: string, gloss: string, connectedItemId?: string }[]
+	additionalSenses?: extraSenseInfo[]
 }
 
 export default interface SensesRepository {
