@@ -14,6 +14,8 @@ model DecisionRecord {
   id        Int       @default(autoincrement()) @id
   time      DateTime  @default(now())
   senseId   String    @map("sense_id")
+  userId    Int
+  langCode  String
   decision  Decision
 }
 

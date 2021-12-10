@@ -1,7 +1,7 @@
 import DecisionRepository, { DECISION } from '@/data-access/DecisionRepository';
 
 export default class FetchDecisionRepository implements DecisionRepository {
-	public async recordDecision( senseId: string, decision: DECISION ): Promise<void> {
+	public async recordDecision( senseId: string, languageCode: string, decision: DECISION ): Promise<void> {
 		try {
 			await fetch( '/decision', {
 				method: 'POST',
@@ -9,7 +9,7 @@ export default class FetchDecisionRepository implements DecisionRepository {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify( {
-					senseId, decision,
+					senseId, decision, langCode: languageCode,
 				} ),
 			} );
 		} catch ( e ) {

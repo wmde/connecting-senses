@@ -145,13 +145,13 @@ export default (
 	): void {
 		context.commit( 'addToListOfSkippedSenses', currentSenseId );
 		context.dispatch( 'goToNextSense' );
-		decisionRepository.recordDecision( currentSenseId, DECISION.SKIPPED );
+		decisionRepository.recordDecision( currentSenseId, context.getters.languageCode, DECISION.SKIPPED );
 	},
 	rejectSense(
 		context: ActionContext<RootState, RootState>,
 		currentSenseId: string,
 	): void {
-		decisionRepository.recordDecision( currentSenseId, DECISION.REJECTED );
+		decisionRepository.recordDecision( currentSenseId, context.getters.languageCode, DECISION.REJECTED );
 		context.commit( 'setUndoState', 'rejection' );
 	},
 	undoRejection(
@@ -168,7 +168,7 @@ export default (
 		const { senseId, itemId } = payload;
 		try {
 			await claimWritingRepository.setClaim( itemId, senseId );
-			await decisionRepository.recordDecision( senseId, DECISION.ACCEPTED );
+			await decisionRepository.recordDecision( senseId, context.getters.languageCode, DECISION.ACCEPTED );
 			context.commit( 'setUndoState', 'connection' );
 		} catch ( e ) {
 			console.log( e );
