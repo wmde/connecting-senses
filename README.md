@@ -14,10 +14,23 @@ You may decide between connecting the item to this sense in Wikidata, skipping t
 
 Note: This tool uses Node 10 and npm 6.14.
 
-- create a local `.env` file (see `.env.example` for reference)
 - In order to start your local development environment, first run `npm i` to install dependencies.
+
+## frontend development
+
 - For the frontend environment run:
-    `npm run serve`
+  `npm run serve` and open the browser to http://localhost:8080/
+
+This will mock all requests to the local backend in the browser.
+The configuration for the mock editing and mock data can be found in `src/mocks/`.
+
+## server development
+
+- create a local `.env` file (see `.env.example` for reference)
+- you can spin up a development database with `docker-compose up`
+  - this will make a mariaDB instance available on port 3306
+  - the connection string in `.env.example` is already setup for this db
+  - also adminer can be used at http://localhost:3000
 - For backend development run:
     `npx nodemon --inspect server.js`
-Per default, the frontend development server will be running locally at `http://localhost:8080/ `, and the backend development server will run at port `5000`.
+  - the backend development server will run at http://localhost:5000.
