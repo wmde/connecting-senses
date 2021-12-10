@@ -85,14 +85,37 @@ router.post( "/decision", async ( req, res, next ) => {
 
 // Senses
 router.get( "/senses", async ( req, res, next ) => {
+	const userId = getUserIdFromRequest( req );
+	if ( !userId ) {
+		return next( createError( 401 ) );
+	}
 	// TODO: Validation!!!
 	const {
 		lang: langCode,
 		qid: langQid
 	} = req.query;
 
+	const senseIdsToSkip = await prisma.decisionRecord.findMany( {
+		where: {
+			OR: [
+				{
+					userId,
+					langCode,
+					decision: 'SKIPPED', // TODO: replace with some enum-like thingy
+				},
+				{
+					langCode,
+					decision: 'REJECTED' // TODO: replace with some enum-like thingy
+				},
+			],
+		},
+		select: {
+			senseId: true,
+		},
+	} ).then( ( queryResults ) => queryResults.map( ( record ) => record.senseId ) );
+
 	try {
-		const result = await senses.get( langCode, langQid );
+		const result = await senses.get( langCode, langQid, senseIdsToSkip );
 
 		res.json( result );
 	} catch (e) {

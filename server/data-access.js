@@ -9,10 +9,11 @@ class SensesRepository {
         this.queryService = queryService;
     }
 
-    async get( languageCode, languageQID ) {
+    async get( languageCode, languageQID, senseIdsToSkip ) {
         const query = process.env.SANDBOXED
             ? queries.sandboxedItemlessSenses()
-            : queries.itemlessSenses( languageCode, languageQID )
+            : queries.itemlessSenses( languageCode, languageQID, senseIdsToSkip )
+
         // Error handling is delegated to the caller.
         // This function will raise all excpetions that axios may raise.
         // See: https://www.npmjs.com/package/axios#handling-errors
