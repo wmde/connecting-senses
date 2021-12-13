@@ -4,11 +4,12 @@ function sanitize( str ){
 }
 
 module.exports = {
-    itemlessSenses: ( languageCode, languageQid ) => {
+    itemlessSenses: ( languageCode, languageQid, senseIdsToSkip ) => {
         const nounQid = 'Q1084';
         const itemForThisSensePid = 'P5137';
         const translationPid = 'P5972';
         const numberOfSensesPerRequest = 10;
+        const prefixedSenseIdsToSkip = senseIdsToSkip.map( senseId => `wd:${senseId}` );
 
         return sanitize(`
             SELECT DISTINCT ?lexemeId ?lemma ?senseId ?gloss
@@ -21,6 +22,7 @@ module.exports = {
             FILTER(LANG(?gloss) = "${languageCode}")
             MINUS { ?senseId wdt:${itemForThisSensePid} [] }
             MINUS { ?senseId wdt:${translationPid} [] }
+            FILTER(?senseId NOT IN (${prefixedSenseIdsToSkip.join(', ')}))
             SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${languageCode}". }
             }
             LIMIT ${numberOfSensesPerRequest}

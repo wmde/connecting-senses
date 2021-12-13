@@ -1,0 +1,10 @@
+/*
+  Warnings:
+
+  - Added the required column `userId` to the `DecisionRecord` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `langCode` to the `DecisionRecord` table without a default value. This is not possible if the table is not empty.
+
+*/
+-- AlterTable
+ALTER TABLE `DecisionRecord` ADD COLUMN     `userId` INTEGER NOT NULL,
+    ADD COLUMN     `langCode` VARCHAR(191) NOT NULL;

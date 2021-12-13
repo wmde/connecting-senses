@@ -9,19 +9,20 @@ class SensesRepository {
         this.queryService = queryService;
     }
 
-    async get( languageCode, languageQID ) {
-        const query = process.env.SANDBOXED 
+    async get( languageCode, languageQID, senseIdsToSkip ) {
+        const query = process.env.SANDBOXED
             ? queries.sandboxedItemlessSenses()
-            : queries.itemlessSenses( languageCode, languageQID )
-        // Error handling is delegated to the caller. 
-        // This function will raise all excpetions that axios may raise. 
+            : queries.itemlessSenses( languageCode, languageQID, senseIdsToSkip )
+
+        // Error handling is delegated to the caller.
+        // This function will raise all excpetions that axios may raise.
         // See: https://www.npmjs.com/package/axios#handling-errors
         const results = await this.queryService.submit( query );
 
         return results.map( ( result ) => {
             const senseUri = result.senseId.value;
             const senseId = senseUri.match( /L\d+-S\d+/ );
-            
+
             if ( !senseId ) {
                 throw new Error( 'Unknown format for sense URI: ' + senseUri );
             }
@@ -52,8 +53,8 @@ class StatementsRepository {
 
         const tokens = await this.mwApi.tokens();
 
-        // Error handling is delegated to the caller. 
-        // This function will raise all excpetions that axios may raise. 
+        // Error handling is delegated to the caller.
+        // This function will raise all excpetions that axios may raise.
         // See: https://www.npmjs.com/package/axios#handling-errors
         return await this.mwApi.post('wbsetclaim', {
             claim: JSON.stringify(claim),

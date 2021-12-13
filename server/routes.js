@@ -11,6 +11,12 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const senses = new SensesRepository( new WDQSClient( process.env.WDQS_ENDPOINT ) );
 
+function getUserIdFromRequest( req ) {
+	if ( !req.session.user ) {
+		return null;
+	}
+	return req.session.user.id;
+}
 
 // Serve Vue.js Application
 router.get( "/", function ( req, res ) {
@@ -59,11 +65,15 @@ router.get( "/currentUser", function ( req, res, next ) {
 
 // Decision tracking
 router.post( "/decision", async ( req, res, next ) => {
+	const userId = getUserIdFromRequest( req );
+	if (!userId) {
+		return next(createError(401));
+	}
 	// TODO: Validation!!!
-	const { senseId, decision } = req.body;
+	const { senseId, decision, langCode } = req.body;
 	try {
 		const result = await prisma.decisionRecord.create( {
-			data: { senseId, decision }
+			data: { senseId, decision, langCode, userId }
 		} );
 
 		res.json( result );
@@ -75,14 +85,37 @@ router.post( "/decision", async ( req, res, next ) => {
 
 // Senses
 router.get( "/senses", async ( req, res, next ) => {
+	const userId = getUserIdFromRequest( req );
+	if ( !userId ) {
+		return next( createError( 401 ) );
+	}
 	// TODO: Validation!!!
 	const {
 		lang: langCode,
 		qid: langQid
 	} = req.query;
 
+	const senseIdsToSkip = await prisma.decisionRecord.findMany( {
+		where: {
+			OR: [
+				{
+					userId,
+					langCode,
+					decision: 'SKIPPED', // TODO: replace with some enum-like thingy
+				},
+				{
+					langCode,
+					decision: 'REJECTED' // TODO: replace with some enum-like thingy
+				},
+			],
+		},
+		select: {
+			senseId: true,
+		},
+	} ).then( ( queryResults ) => queryResults.map( ( record ) => record.senseId ) );
+
 	try {
-		const result = await senses.get( langCode, langQid );
+		const result = await senses.get( langCode, langQid, senseIdsToSkip );
 
 		res.json( result );
 	} catch (e) {

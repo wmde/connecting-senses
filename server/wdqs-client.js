@@ -15,11 +15,13 @@ module.exports = class WDQSClient {
     }
 
     async submit( sparql ){
-        // Error handling is delegated to the caller. 
-        // This function will raise all excpetions that axios may raise. 
+        // TODO: maybe check that query is less than 4kb and use POST otherwise
+
+        // Error handling is delegated to the caller.
+        // This function will raise all excpetions that axios may raise.
         // See: https://www.npmjs.com/package/axios#handling-errors
         const response = await this.httpClient.get('/', {
-            params: { 
+            params: {
                 query: sparql
             }
         });
